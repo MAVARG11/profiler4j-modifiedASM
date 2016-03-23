@@ -1,0 +1,48 @@
+Found one Java-level deadlock:
+=============================
+"PROFILER4J_REMOTE_AGENT":
+  waiting to lock monitor 0x0096c11c (object 0x05769dd8, a org.jboss.mx.loading.
+UnifiedClassLoader3),
+  which is held by "ContainerBackgroundProcessor[StandardEngine[jboss.web]]"
+"ContainerBackgroundProcessor[StandardEngine[jboss.web]]":
+  waiting to lock monitor 0x0096c05c (object 0x051917b8, a java.lang.Object),
+  which is held by "PROFILER4J_REMOTE_AGENT"
+
+Java stack information for the threads listed above:
+===================================================
+"PROFILER4J_REMOTE_AGENT":
+        at sun.instrument.InstrumentationImpl.redefineClasses0(Native Method)
+        at sun.instrument.InstrumentationImpl.redefineClasses(InstrumentationImp
+l.java:79)
+        at net.sf.profiler4j.agent.Agent.reloadModifiedClasses(Agent.java:126)
+        - locked <0x051917b8> (a java.lang.Object)
+        at net.sf.profiler4j.agent.Server.handleApplyRules(Server.java:182)
+        at net.sf.profiler4j.agent.Server.serveClient(Server.java:110)
+        at net.sf.profiler4j.agent.Server.run(Server.java:53)
+"ContainerBackgroundProcessor[StandardEngine[jboss.web]]":
+        at net.sf.profiler4j.agent.ThreadInfo.enterMethod(ThreadInfo.java:84)
+        - waiting to lock <0x051917b8> (a java.lang.Object)
+        at EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap.get(Concurre
+ntReaderHashMap.java)
+        at org.jboss.mx.loading.UnifiedLoaderRepository3.getCachedClass(UnifiedL
+oaderRepository3.java:192)
+        at org.jboss.mx.loading.RepositoryClassLoader.loadClass(RepositoryClassL
+oader.java:380)
+        at java.lang.ClassLoader.loadClass(ClassLoader.java:251)
+        at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:319)
+        - locked <0x05769dd8> (a org.jboss.mx.loading.UnifiedClassLoader3)
+        at org.apache.catalina.startup.ContextConfig.lifecycleEvent(ContextConfi
+g.java)
+        at org.apache.catalina.util.LifecycleSupport.fireLifecycleEvent(Lifecycl
+eSupport.java:119)
+        at org.apache.catalina.core.ContainerBase.backgroundProcess(ContainerBas
+e.java:1304)
+        at org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor.p
+rocessChildren(ContainerBase.java:1568)
+        at org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor.p
+rocessChildren(ContainerBase.java:1577)
+        at org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor.p
+rocessChildren(ContainerBase.java:1577)
+        at org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor.r
+un(ContainerBase.java:1557)
+        at java.lang.Thread.run(Thread.java:595)
